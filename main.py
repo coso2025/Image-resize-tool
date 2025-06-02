@@ -6,35 +6,53 @@ class ImageResizerApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Image Resize Tool")
-        self.root.geometry("500x500")
-        self.root.config(bg="#f0f0f0")
+        self.root.geometry("500x550")
+        self.root.config(bg="#1e1e1e")  # Dark mode background
 
         self.image_path = None
         self.original_image = None
 
+        self.font_style = ("Arial", 12)
+
         self.create_widgets()
 
     def create_widgets(self):
-        tk.Label(self.root, text="Image Resize Tool", font=("Arial", 18, "bold"), bg="#f0f0f0").pack(pady=10)
+        tk.Label(self.root, text="Image Resize Tool", font=("Arial", 20, "bold"),
+                 bg="#1e1e1e", fg="white").pack(pady=15)
 
-        self.image_label = tk.Label(self.root, text="No image loaded", bg="#ccc", width=50, height=10)
+        self.image_label = tk.Label(self.root, text="No image loaded", bg="#2e2e2e",
+                                    fg="white", width=50, height=10, relief="groove", bd=2)
         self.image_label.pack(pady=10)
 
-        tk.Button(self.root, text="Choose Image", command=self.load_image, bg="#4CAF50", fg="white").pack(pady=5)
+        self.create_button("Choose Image", self.load_image, "#00bcd4").pack(pady=5)
 
         self.width_entry = self.create_labeled_entry("New Width:")
         self.height_entry = self.create_labeled_entry("New Height:")
 
-        tk.Button(self.root, text="Resize", command=self.resize_image, bg="#2196F3", fg="white").pack(pady=10)
-        tk.Button(self.root, text="Save Resized Image", command=self.save_image, bg="#FF9800", fg="white").pack(pady=5)
+        self.create_button("Resize", self.resize_image, "#ff5252").pack(pady=10)
+        self.create_button("Save Resized Image", self.save_image, "#ffa500").pack(pady=5)
 
     def create_labeled_entry(self, label_text):
-        frame = tk.Frame(self.root, bg="#f0f0f0")
+        frame = tk.Frame(self.root, bg="#1e1e1e")
         frame.pack(pady=5)
-        tk.Label(frame, text=label_text, bg="#f0f0f0").pack(side=tk.LEFT)
-        entry = tk.Entry(frame)
-        entry.pack(side=tk.LEFT)
+
+        label = tk.Label(frame, text=label_text, font=self.font_style,
+                         fg="white", bg="#1e1e1e")
+        label.pack(side=tk.LEFT, padx=5)
+
+        entry = tk.Entry(frame, font=self.font_style, fg="white", bg="#2e2e2e",
+                         insertbackground='white', relief="flat", width=10,
+                         highlightbackground="#444", highlightthickness=1)
+        entry.pack(side=tk.LEFT, padx=5)
+
         return entry
+
+    def create_button(self, text, command, color):
+        return tk.Button(self.root, text=text, command=command,
+                         font=self.font_style, fg="white", bg=color,
+                         activebackground=color, activeforeground="white",
+                         relief="flat", bd=0, padx=15, pady=7,
+                         highlightthickness=1, highlightbackground="#1e1e1e", cursor="hand2")
 
     def load_image(self):
         path = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*.jpg;*.jpeg;*.bmp")])
@@ -48,7 +66,7 @@ class ImageResizerApp:
         thumb = image.copy()
         thumb.thumbnail((200, 200))
         tk_img = ImageTk.PhotoImage(thumb)
-        self.image_label.configure(image=tk_img)
+        self.image_label.configure(image=tk_img, compound="top")
         self.image_label.image = tk_img
 
     def resize_image(self):
@@ -67,7 +85,8 @@ class ImageResizerApp:
 
     def save_image(self):
         if hasattr(self, 'resized_image'):
-            path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png"), ("JPEG files", "*.jpg")])
+            path = filedialog.asksaveasfilename(defaultextension=".png",
+                                                filetypes=[("PNG files", "*.png"), ("JPEG files", "*.jpg")])
             if path:
                 self.resized_image.save(path)
                 messagebox.showinfo("Saved", "Image saved successfully!")
