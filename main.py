@@ -6,12 +6,11 @@ class ImageResizerApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Image Resize Tool")
-        self.root.geometry("500x550")
+        self.root.geometry("500x500")
         self.root.config(bg="#f0f0f0")
 
         self.image_path = None
         self.original_image = None
-        self.resized_image = None
 
         self.create_widgets()
 
@@ -25,10 +24,6 @@ class ImageResizerApp:
 
         self.width_entry = self.create_labeled_entry("New Width:")
         self.height_entry = self.create_labeled_entry("New Height:")
-
-        self.keep_aspect_var = tk.BooleanVar()
-        self.keep_aspect_check = tk.Checkbutton(self.root, text="Keep Aspect Ratio", variable=self.keep_aspect_var, bg="#f0f0f0")
-        self.keep_aspect_check.pack(pady=5)
 
         tk.Button(self.root, text="Resize", command=self.resize_image, bg="#2196F3", fg="white").pack(pady=10)
         tk.Button(self.root, text="Save Resized Image", command=self.save_image, bg="#FF9800", fg="white").pack(pady=5)
@@ -62,37 +57,16 @@ class ImageResizerApp:
             return
 
         try:
-            new_width = self.width_entry.get()
-            new_height = self.height_entry.get()
-
-            if not new_width and not new_height:
-                raise ValueError("Please enter at least width or height")
-
-            orig_width, orig_height = self.original_image.size
-
-            if self.keep_aspect_var.get():
-                if new_width:
-                    new_width = int(new_width)
-                    ratio = new_width / orig_width
-                    new_height = int(orig_height * ratio)
-                elif new_height:
-                    new_height = int(new_height)
-                    ratio = new_height / orig_height
-                    new_width = int(orig_width * ratio)
-                else:
-                    raise ValueError("Enter at least one dimension")
-            else:
-                new_width = int(new_width)
-                new_height = int(new_height)
-
-            self.resized_image = self.original_image.resize((new_width, new_height), Image.ANTIALIAS)
+            new_width = int(self.width_entry.get())
+            new_height = int(self.height_entry.get())
+            self.resized_image = self.original_image.resize((new_width, new_height))
             self.show_thumbnail(self.resized_image)
-            messagebox.showinfo("Success", f"Image resized to {new_width} x {new_height}")
+            messagebox.showinfo("Success", "Image resized successfully!")
         except Exception as e:
             messagebox.showerror("Error", f"Invalid input: {e}")
 
     def save_image(self):
-        if self.resized_image:
+        if hasattr(self, 'resized_image'):
             path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png"), ("JPEG files", "*.jpg")])
             if path:
                 self.resized_image.save(path)
