@@ -41,7 +41,7 @@ class ImageResizerApp:
         self.width_entry.bind("<KeyRelease>", lambda e: self.update_dimensions("width"))
         self.height_entry.bind("<KeyRelease>", lambda e: self.update_dimensions("height"))
 
-        # Dropdown pentru formatul de salvare (am adăugat mai multe!)
+        # Dropdown pentru formatul de salvare
         self.format_var = tk.StringVar(value="PNG")
         format_frame = tk.Frame(self.root, bg="#0a0a0a")
         format_frame.pack(pady=5)
@@ -73,7 +73,7 @@ class ImageResizerApp:
         return entry
 
     def create_button(self, text, command, color):
-        # Creează un buton cu un stil personalizat
+        # Creează un buton
         return tk.Button(self.root, text=text, command=command,
                          font=self.font_style, fg="white", bg=color,
                          activebackground=color, activeforeground="white",
