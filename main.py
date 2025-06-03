@@ -107,7 +107,7 @@ class ImageResizerApp:
         preview_img.thumbnail((400, 300))
         tk_img = ImageTk.PhotoImage(preview_img)
         self.image_label.configure(image=tk_img)
-        self.image_label.image = tk_img  # salvăm referința ca să nu fie garbage collected
+        self.image_label.image = tk_img  # salvam referința ca sa nu fie spatiu ocupat degeaba
 
     def update_dimensions(self, changed_field):
         # Actualizeaza width/height ca sa pastreze aspect ratio
