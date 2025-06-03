@@ -10,18 +10,18 @@ class ImageResizerApp:
         self.root.geometry("800x850")
         self.root.config(bg="#0a0a0a")
 
-        # Variabile interne pentru imagine și dimensiuni
+        # Variabile interne pentru imagine si dimensiuni
         self.image_path = None
         self.original_image = None
         self.resized_image = None
         self.aspect_ratio = None
-        self.last_edited = None  # Ne ajută să știm ce câmp a fost modificat (width sau height)
+        self.last_edited = None  # Ne ajuta sa stim ce câmp a fost modificat (width sau height)
 
         self.font_style = ("Arial", 12)
         self.create_widgets()
 
     def create_widgets(self):
-        # Titlul aplicației
+        # Titlul aplicatiei
         tk.Label(self.root, text="Image Resize Tool", font=("Arial", 20, "bold"),
                  fg="white", bg="#0a0a0a").pack(pady=15)
 
@@ -30,14 +30,14 @@ class ImageResizerApp:
                                     width=70, height=25, relief="groove", bd=2)
         self.image_label.pack(pady=10)
 
-        # Buton de încărcare a imaginii
+        # Buton de incarcare a imaginii
         self.create_button("Choose Image", self.load_image, "#00bcd4").pack(pady=5)
 
-        # Entry-uri pentru lățime și înălțime
+        # Entry-uri pentru latime si inaltime
         self.width_entry = self.create_labeled_entry("New Width:")
         self.height_entry = self.create_labeled_entry("New Height:")
 
-        # Ascultăm modificările în fiecare entry
+        # Ascultam modificarile in fiecare entry
         self.width_entry.bind("<KeyRelease>", lambda e: self.update_dimensions("width"))
         self.height_entry.bind("<KeyRelease>", lambda e: self.update_dimensions("height"))
 
@@ -54,7 +54,7 @@ class ImageResizerApp:
                                    values=self.supported_formats, state="readonly", width=10)
         format_menu.pack(side=tk.LEFT)
 
-        # Progress bar pentru statusul operațiunii
+        # Progress bar pentru statusul operatiunii
         self.progress = ttk.Progressbar(self.root, length=300, mode="determinate")
         self.progress.pack(pady=10)
 
@@ -62,7 +62,7 @@ class ImageResizerApp:
         self.create_button("Resize & Save", self.resize_image, "#003366").pack(pady=10)
 
     def create_labeled_entry(self, label_text):
-        # Creează un entry (input) cu etichetă
+        # Creeaza un entry (input) cu eticheta
         frame = tk.Frame(self.root, bg="#0a0a0a")
         frame.pack(pady=5)
         tk.Label(frame, text=label_text, font=self.font_style,
@@ -73,7 +73,7 @@ class ImageResizerApp:
         return entry
 
     def create_button(self, text, command, color):
-        # Creează un buton
+        # Creeaza un buton
         return tk.Button(self.root, text=text, command=command,
                          font=self.font_style, fg="white", bg=color,
                          activebackground=color, activeforeground="white",
@@ -81,28 +81,28 @@ class ImageResizerApp:
                          highlightthickness=0)
 
     def load_image(self):
-        # Deschide dialogul de alegere fișier și încarcă imaginea selectată
+        # Deschide dialogul de alegere fisier si incarca imaginea selectata
         path = filedialog.askopenfilename(filetypes=[
             ("Image files", "*.png;*.jpg;*.jpeg;*.bmp;*.gif;*.tiff;*.webp")])
         if path:
             self.image_path = path
             self.original_image = Image.open(path)
 
-            # Calculăm aspect ratio-ul original
+            # Calculam aspect ratio-ul original
             self.aspect_ratio = self.original_image.height / self.original_image.width
 
-            # Populăm entry-urile cu dimensiunile imaginii originale
+            # Populam entry-urile cu dimensiunile imaginii originale
             self.width_entry.delete(0, tk.END)
             self.width_entry.insert(0, str(self.original_image.width))
             self.height_entry.delete(0, tk.END)
             self.height_entry.insert(0, str(self.original_image.height))
 
-            # Afișăm preview-ul imaginii
+            # Afisam preview-ul imaginii
             self.show_preview(self.original_image)
             self.image_label.config(text="")
 
     def show_preview(self, image):
-        # Redă o versiune micșorată (thumbnail) în UI
+        # Reda o versiune micșorata (thumbnail) în UI
         preview_img = image.copy()
         preview_img.thumbnail((400, 300))
         tk_img = ImageTk.PhotoImage(preview_img)
@@ -110,7 +110,7 @@ class ImageResizerApp:
         self.image_label.image = tk_img  # salvăm referința ca să nu fie garbage collected
 
     def update_dimensions(self, changed_field):
-        # Actualizează width/height ca să păstreze aspect ratio
+        # Actualizeaza width/height ca sa pastreze aspect ratio
         if self.original_image is None or self.aspect_ratio is None:
             return
 
@@ -127,17 +127,17 @@ class ImageResizerApp:
                 self.width_entry.delete(0, tk.END)
                 self.width_entry.insert(0, str(int(new_width)))
         except ValueError:
-            # Dacă inputul nu e valid (ex: text), ignorăm
+            # Daca inputul nu e valid (ex: text), ignoram
             pass
 
     def resize_image(self):
-        # Redimensionează și salvează imaginea în formatul ales
+        # Redimensioneaza si salveaza imaginea in formatul ales
         if self.original_image is None:
             messagebox.showerror("Error", "No image loaded")
             return
 
         try:
-            # Preluăm noile dimensiuni
+            # Preluam noile dimensiuni
             new_width = int(self.width_entry.get())
             new_height = int(self.height_entry.get())
 
@@ -152,7 +152,7 @@ class ImageResizerApp:
             self.progress["value"] = 50
             self.root.update_idletasks()
 
-            # Pregătim salvarea
+            # Pregatim salvarea
             output_folder = "output"
             os.makedirs(output_folder, exist_ok=True)
 
@@ -162,7 +162,7 @@ class ImageResizerApp:
             counter = 1
             save_path = os.path.join(output_folder, base_name + ext)
 
-            # Evităm să suprascriem fișiere
+            # Evitam sa suprascriem fisiere
             while os.path.exists(save_path):
                 counter += 1
                 save_path = os.path.join(output_folder, f"{base_name} ({counter}){ext}")
@@ -170,14 +170,14 @@ class ImageResizerApp:
             # Unele formate trebuie denumite altfel în PIL
             save_format = "JPEG" if selected_format == "JPG" else selected_format
 
-            # Salvăm imaginea
+            # Salvam imaginea
             self.resized_image.save(save_path, format=save_format)
 
             self.progress["value"] = 100
             self.root.update_idletasks()
 
             messagebox.showinfo("Success", f"Image resized & saved to:\n{save_path}")
-            self.progress["value"] = 0  # Resetăm progress bar-ul
+            self.progress["value"] = 0  # Resetam progress bar-ul
 
         except Exception as e:
             messagebox.showerror("Error", f"Invalid input: {e}")
